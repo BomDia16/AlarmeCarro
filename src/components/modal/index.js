@@ -2,6 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Alert, Pressable, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'
 import useStorage from "../../hooks/useStorage";
+import { useState } from 'react';
+import { TextInputMask } from 'react-native-masked-text'
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -9,22 +11,43 @@ export function ModalCar({handleClose}) {
 
     const { saveItem } = useStorage();
     const [placaCarro, setPlacaCarro] = useState("")
+    const [marcaCarro, setMarcaCarro] = useState("")
+    const [modeloCarro, setModeloCarro] = useState("")
+    const [corCarro, setCorCarro] = useState("")
     
     async function handleSaveCar(){
 
         // precisa salvar os atributos do carro
-        // e descobrir como faz pra pegar eles
 
         let placa = ""
         let marca = ""
         let modelo = ""
         let cor = ""
 
-        await Clipboard.setStringAsync(password)
-        await saveItem('@pass', password)
+        if (placaCarro === "" || marcaCarro === "" || modeloCarro === "" || cor === "") {
+            Alert.alert("Preencha todos os campos!")
+        } else {
+            placa += placaCarro
+            marca += marcaCarro
+            modelo += modeloCarro
+            cor += corCarro
+
+            await saveItem('@placa', placa)
+            await saveItem('@marca', marca)
+            await saveItem('@modelo', modelo)
+            await saveItem('@cor', cor)
+
+            alert('Senha salva com sucesso!')
+            handleClose();
+        }
+
+        
+
+        //await Clipboard.setStringAsync(password)
+        //await saveItem('@pass', password)
             
-        alert('Senha salva com sucesso!')
-        handleClose();
+        //alert('Senha salva com sucesso!')
+        //handleClose();
     }
     
     return (
@@ -36,13 +59,31 @@ export function ModalCar({handleClose}) {
                 </View>
 
                 <View style={styles.formArea}>
-                    <TextInput style={styles.input} placeholder='Placa' placeholderTextColor="#161616"/>
+                    <TextInputMask style={styles.input} 
+                                placeholder='Placa' 
+                                type={'custom'}
+                                options={{ mask: 'AAA-9999' }}
+                                placeholderTextColor="#161616" 
+                                value={placaCarro}
+                                onChangeText={ (value) => setPlacaCarro(value) }/>
 
-                    <TextInput style={styles.input} placeholder='Marca' placeholderTextColor="#161616"/>
+                    <TextInput style={styles.input} 
+                                placeholder='Marca' 
+                                placeholderTextColor="#161616"
+                                value={marcaCarro}
+                                onChangeText={ (value) => setMarcaCarro(value) }/>
 
-                    <TextInput style={styles.input} placeholder='Modelo' placeholderTextColor="#161616"/>
+                    <TextInput style={styles.input} 
+                                placeholder='Modelo' 
+                                placeholderTextColor="#161616"
+                                value={modeloCarro}
+                                onChangeText={ (value) => setModeloCarro(value) }/>
 
-                    <TextInput style={styles.input} placeholder='Cor' placeholderTextColor="#161616"/>
+                    <TextInput style={styles.input} 
+                                placeholder='Cor' 
+                                placeholderTextColor="#161616"
+                                value={corCarro}
+                                onChangeText={ (value) => setCorCarro(value) }/>
                 </View>
 
                 <View style={styles.buttonArea}>
