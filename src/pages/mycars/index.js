@@ -1,11 +1,47 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { useState, useEffect } from "react";
+import { View, Text, StyleSheet, FlatList } from 'react-native'
+import { useIsFocused } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import useStorage from "../../hooks/useStorage";
+
+import { CarroItem } from "./components/carroItem";
 
 export function Mycars() {
-    return (
-      <View style={styles.container}>      
-        <Text>Novo Carro</Text>
-      </View>
-    );
+
+      const [listCarros, setListCarros] = useState([])
+      const focused = useIsFocused();
+      const { getItem, removeItem } = useStorage();
+
+      useEffect(() => {
+          async function loadCarros(){
+              const carros = await getItem("@carro")
+              setListCarros(carros);
+          }
+
+          loadCarros();
+      }, [focused])
+
+      async function handleDeleteCarro(item){
+          const carros = await removeItem('@carro', item)
+          setListCarros(carros)
+      }
+
+      return (
+        <SafeAreaView style={{ flex:1, }}>
+            <View style={styles.header}>
+                <Text style={styles.title}>Meus carros</Text>
+            </View>
+
+            <View style={styles.content}>
+                <FlatList
+                    style={{ flex:1, paddingTop:14, }}
+                    data={listCarros}
+                    keyExtractor={ (item) => String(item) }
+                    renderItem={ ({item}) => <CarroItem data={item} removePassword={ () => handleDeletePassword(item) } /> }
+                />
+            </View>
+        </SafeAreaView>
+      );
 }
 
 const styles = StyleSheet.create({
@@ -32,4 +68,21 @@ const styles = StyleSheet.create({
       borderBottomColor: '#737373',
       borderBottomWidth: StyleSheet.hairlineWidth,
     },
+    header:{
+      backgroundColor: '#392de9',
+      paddingTop:58,
+      paddingBottom:14,
+      paddingLeft:14,
+      paddingRight:14,
+    },
+    title:{
+        fontSize:18,
+        color:'#FFF',
+        fontWeight:'bold',
+    },
+    content:{
+        flex:1,
+        paddingLeft:14,
+        paddingRight:14,
+    }
 });

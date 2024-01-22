@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, View, Button, Alert, Modal } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, Modal, Image } from 'react-native';
 import { ModalCar } from '../../components/modal';
 
 const Separator = () => <View style={styles.separator} />;
@@ -16,6 +16,15 @@ export function Home() {
     return (
         <View style={styles.container}>      
             <StatusBar style="auto" />
+
+            <View style={styles.areaImagem}>
+              <Image
+                source={require("../../assets/logo.png")}
+                style={styles.logo}
+                resizeMode='center'
+              />
+            </View>
+
             <View style={styles.texto}>
                 <Text>Alarme Carro!</Text>
                 <Text>Um app que notifica o usuário de um eventual roubo.</Text>
@@ -54,6 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
+    paddingTop:20
   },
 
   separator: {

@@ -4,8 +4,8 @@ const useStorage = () => {
     // buscar itens salvos
     const getItem = async (key) => {
         try {
-            const passwords = await AsyncStorage.getItem(key);
-            return JSON.parse(passwords) || [];
+            const carros = await AsyncStorage.getItem(key);
+            return JSON.parse(carros) || [];
 
         } catch (error) {
             console.log('Erro ao buscar', error)
@@ -16,9 +16,9 @@ const useStorage = () => {
     // salvar item no storage
     const saveItem = async (key, value) => {
         try {
-            let passwords = await getItem(key);
-            passwords.push(value)
-            await AsyncStorage.setItem(key, JSON.stringify(passwords))
+            let carros = await getItem(key);
+            carros.push(value)
+            await AsyncStorage.setItem(key, JSON.stringify(carros))
             
         } catch (error) {
             console.log('Erro ao salvar', error)
@@ -28,12 +28,12 @@ const useStorage = () => {
     // deletar item no storage
     const removeItem = async (key, item) => {
         try {
-            let passwords = await getItem(key);
-            let myPasswords = passwords.filter( (password) => {
-                return (password !== item)
+            let carros = await getItem(key);
+            let myCarros = carros.filter( (carro) => {
+                return (carro !== item)
             })
-            await AsyncStorage.setItem(key, JSON.stringify(myPasswords))
-            return myPasswords;
+            await AsyncStorage.setItem(key, JSON.stringify(myCarros))
+            return myCarros;
             
         } catch (error) {
             console.log('Erro ao remover', error)

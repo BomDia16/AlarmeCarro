@@ -19,26 +19,28 @@ export function ModalCar({handleClose}) {
 
         // precisa salvar os atributos do carro
 
-        let placa = ""
-        let marca = ""
-        let modelo = ""
-        let cor = ""
+        const carro = {
+            placa: "",
+            marca: "",
+            modelo: "",
+            cor: "",
+        }
 
-        if (placaCarro === "" || marcaCarro === "" || modeloCarro === "" || cor === "") {
+        if (placaCarro === "" || marcaCarro === "" || modeloCarro === "" || corCarro === "") {
             Alert.alert("Preencha todos os campos!")
         } else {
-            placa += placaCarro
-            marca += marcaCarro
-            modelo += modeloCarro
-            cor += corCarro
+            carro.placa += placaCarro
+            carro.marca += marcaCarro
+            carro.modelo += modeloCarro
+            carro.cor += corCarro
 
-            await saveItem('@placa', placa)
-            await saveItem('@marca', marca)
-            await saveItem('@modelo', modelo)
-            await saveItem('@cor', cor)
+            //console.log(carro.placa,carro.cor,carro.marca,carro.modelo)
+
+            await saveItem('@carro', carro)
 
             alert('Senha salva com sucesso!')
             handleClose();
+
         }
 
         
