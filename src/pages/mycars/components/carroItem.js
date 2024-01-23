@@ -14,7 +14,7 @@ export function CarroItem({ data, removeCarro }){
 
 const styles = StyleSheet.create({
     container:{
-        backgroundColor: "#0e0e0e",
+        backgroundColor: "#474A51",
         padding:14,
         width:"100%",
         marginBottom:14,

@@ -38,9 +38,8 @@ export function ModalCar({handleClose}) {
 
             await saveItem('@carro', carro)
 
-            alert('Senha salva com sucesso!')
+            alert('Carro salvo com sucesso!')
             handleClose();
-
         }
 
         

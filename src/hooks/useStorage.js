@@ -29,14 +29,11 @@ const useStorage = () => {
     const removeItem = async (key, item) => {
         try {
             let carros = await getItem(key);
-            let myCarros = carros.filter( (carro) => {
-                return (carro !== item)
-            })
-            await AsyncStorage.setItem(key, JSON.stringify(myCarros))
+            let myCarros = carros.filter(carro => carro.id !== item.id);
+            await AsyncStorage.setItem(key, JSON.stringify(myCarros));
             return myCarros;
-            
         } catch (error) {
-            console.log('Erro ao remover', error)
+            console.log('Erro ao remover', error);
         }
     }
 
