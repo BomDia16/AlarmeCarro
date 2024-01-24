@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Pressable, Modal } from 'react-native'
 import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useStorage from "../../hooks/useStorage";
 
-import { CarroItem } from "./components/carroItem";
+import { CarroItem, ModalCarro } from "./components/carroItem";
+import { ModalCar } from "../../components/modal";
 
 export function Mycars() {
+
+      const [modalVisible, setModalVisible] = useState(false);
 
       const [listCarros, setListCarros] = useState([])
       const focused = useIsFocused();
@@ -27,6 +30,10 @@ export function Mycars() {
         setListCarros(carros)
       }
 
+      async function handleUpdateCarro(item) {
+        setModalVisible(true)
+      }
+
       return (
         <SafeAreaView style={{ flex:1, }}>
             <View style={styles.header}>
@@ -34,22 +41,27 @@ export function Mycars() {
             </View>
 
             <View style={styles.content}>
-                <Text>Para remover algum carro apenas segure em cima do carro desejado.</Text>
+                <Text style={styles.texto}>Para editar, só clique em cima do carro desejado.</Text>
 
                 <Pressable style={styles.containerTabela}>
                   <Text style={styles.text}>Placa</Text>
                   <Text style={styles.text}>Marca</Text>
                   <Text style={styles.text}>Modelo</Text>
                   <Text style={styles.text}>Cor</Text>
+                  <Text style={styles.text}>Delete</Text>
                 </Pressable>
 
                 <FlatList
                     style={{ flex:1, paddingTop:14, }}
                     data={listCarros}
                     keyExtractor={ (item) => String(item) }
-                    renderItem={ ({item}) => <CarroItem data={item} removeCarro={ () => handleDeleteCarro(item) } /> }
+                    renderItem={ ({item}) => <CarroItem data={item} removeCarro={ () => handleDeleteCarro(item) } updateCarro={ () => handleUpdateCarro(item) } /> }
                 />
             </View>
+
+            <Modal visible={modalVisible} animationType='fade'>
+                <ModalCar handleClose={ () => setModalVisible(false) } />
+            </Modal>
         </SafeAreaView>
       );
 }
@@ -62,9 +74,10 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
   
-    texto: {
-      alignItems: 'center',
-      justifyContent: 'center',
+    texto:{
+      fontSize:20,
+      fontWeight:'bold',
+      color:'#000',
     },
   
     botoes: {

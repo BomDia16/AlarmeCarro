@@ -1,4 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import UUIDGenerator from 'react-native-uuid-generator';
+
+const generateUniqueId = () => {
+    return new Date().getTime().toString();
+};
 
 const useStorage = () => {
     // buscar itens salvos
@@ -17,12 +22,15 @@ const useStorage = () => {
     const saveItem = async (key, value) => {
         try {
             let carros = await getItem(key);
-            carros.push(value)
-            await AsyncStorage.setItem(key, JSON.stringify(carros))
-            
-        } catch (error) {
-            console.log('Erro ao salvar', error)
-        }
+      
+            // Atribui uma ID única ao carro usando a função generateUniqueId
+            const carroComId = { ...value, id: generateUniqueId() };
+      
+            carros.push(carroComId);
+            await AsyncStorage.setItem(key, JSON.stringify(carros));
+          } catch (error) {
+            console.log('Erro ao salvar', error);
+          }
     }
 
     // deletar item no storage
