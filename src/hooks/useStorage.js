@@ -45,10 +45,31 @@ const useStorage = () => {
         }
     }
 
+    // atualizar item no storage
+    const updateItem = async (key, updatedItem) => {
+        try {
+            let carros = await getItem(key);
+
+            // Encontrar o índice do item a ser atualizado
+            const index = carros.findIndex(carro => carro.id === updatedItem.id);
+
+            if (index !== -1) {
+                // Atualizar o valor do carro no array
+                carros[index] = updatedItem;
+
+                // Salvar o array atualizado no AsyncStorage
+                await AsyncStorage.setItem(key, JSON.stringify(carros));
+            }
+        } catch (error) {
+            console.log('Erro ao atualizar', error);
+        }
+    }
+
     return {
         getItem,
         saveItem,
         removeItem,
+        updateItem
     }
 }
 

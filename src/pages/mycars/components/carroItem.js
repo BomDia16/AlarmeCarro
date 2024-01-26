@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet, Pressable, Alert, TextInput, TouchableOpacity } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { TextInputMask } from "react-native-masked-text";
+import { useState } from 'react';
+import useStorage from "../../../hooks/useStorage";
 
 export function CarroItem({ data, removeCarro, updateCarro }){
     return (
@@ -16,11 +18,44 @@ export function CarroItem({ data, removeCarro, updateCarro }){
 }
 
 export function ModalCarro({handleClose, data}) {
+
+    const [placaCarro, setPlacaCarro] = useState(data.placa)
+    const [marcaCarro, setMarcaCarro] = useState(data.marca)
+    const [modeloCarro, setModeloCarro] = useState(data.modelo)
+    const [corCarro, setCorCarro] = useState(data.cor)
+
+    const { updateItem } = useStorage();
+
+    async function handleUpdateCar() {
+        const carro = {
+            placa: '',
+            marca: '',
+            modelo: '',
+            cor: '',
+        }
+
+        if (placaCarro === "" || marcaCarro === "" || modeloCarro === "" || corCarro === "") {
+            Alert.alert("Preencha todos os campos!")
+        } else {
+            carro.placa += placaCarro
+            carro.marca += marcaCarro
+            carro.modelo += modeloCarro
+            carro.cor += corCarro
+
+            //console.log(carro.placa,carro.cor,carro.marca,carro.modelo)
+
+            await updateItem('@carro', carro)
+
+            alert('Carro salvo com sucesso!')
+            handleClose();
+        }
+    }
+
     return (
         <View style={styles.containerModal}>
-            <View style={styles.content}>
+            <View style={styles.contentModal}>
                 <View style={styles.titleArea}>
-                    <Text style={styles.title}>Editar Carro {data.id}</Text>
+                    <Text style={styles.title}>Editar Carro: {data.modelo}{data.cor}</Text>
                     <Ionicons size={30} color={'blue'} name='car' />
                 </View>
 
@@ -30,25 +65,25 @@ export function ModalCarro({handleClose, data}) {
                                 type={'custom'}
                                 options={{ mask: 'AAA-9999' }}
                                 placeholderTextColor="#161616" 
-                                value={data.placa}
+                                value={placaCarro}
                                 onChangeText={ (value) => setPlacaCarro(value) }/>
 
                     <TextInput style={styles.input} 
                                 placeholder='Marca' 
                                 placeholderTextColor="#161616"
-                                value={data.marca}
+                                value={marcaCarro}
                                 onChangeText={ (value) => setMarcaCarro(value) }/>
 
                     <TextInput style={styles.input} 
                                 placeholder='Modelo' 
                                 placeholderTextColor="#161616"
-                                value={data.modelo}
+                                value={modeloCarro}
                                 onChangeText={ (value) => setModeloCarro(value) }/>
 
                     <TextInput style={styles.input} 
                                 placeholder='Cor' 
                                 placeholderTextColor="#161616"
-                                value={data.cor}
+                                value={corCarro}
                                 onChangeText={ (value) => setCorCarro(value) }/>
                 </View>
 
@@ -57,8 +92,8 @@ export function ModalCarro({handleClose, data}) {
                         <Text style={styles.buttonText}>Voltar</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.button, styles.buttonSave]} onPress={handleSaveCar}>
-                        <Ionicons style={styles.buttonSaveText} size={25} color={'white'} name='add' />
+                    <TouchableOpacity style={[styles.button, styles.buttonSave]} onPress={handleUpdateCar}>
+                        <Ionicons style={styles.buttonSaveText} size={25} name='add' />
                     </TouchableOpacity>
                 </View>
             </View>    
@@ -133,5 +168,65 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'space-between',
         marginTop: 30,
-      }
+      },
+      containerModal:{
+        backgroundColor: 'rgba(24, 24, 24, 0.6)',
+        flex:1,
+        alignItems:'center',
+        justifyContent:'center',
+    },
+    contentModal:{
+        backgroundColor: '#FFF',
+        width: '85%',
+        paddingBottom: 24,
+        paddingTop:24,
+        alignItems:'center',
+        justifyContent:'center',
+        borderRadius: 8,
+    },
+    titleArea:{
+        flexDirection:'row',
+    },
+    formArea:{
+        width:'90%',
+        marginTop:8,
+        alignItems:'center',
+        justifyContent:'space-between'
+    },
+    title:{
+        fontSize:20,
+        fontWeight:'bold',
+        color:'#000',
+        marginBottom:24,
+    },
+    input:{
+        backgroundColor: 'gray',
+        width: '90%',
+        padding:14,
+        borderRadius: 8,
+        borderColor: 'black',
+        marginBottom: 10
+    },
+    buttonArea:{
+        flexDirection:'row',
+        width:'90%',
+        marginTop:8,
+        alignItems:'center',
+        justifyContent:'space-between'
+    },
+    button:{
+        flex:1,
+        alignItems:'center',
+        marginBottom:14,
+        marginTop:14,
+        padding:8,
+    },
+    buttonSave:{
+        backgroundColor: '#392DE9',
+        borderRadius:8,
+    },
+    buttonSaveText:{
+        color:'#FFF',
+        fontWeight:'bold',
+    },
 })

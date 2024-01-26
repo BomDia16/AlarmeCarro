@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, FlatList, Pressable, Modal } from 'react-native'
 import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useStorage from "../../hooks/useStorage";
 
 import { CarroItem, ModalCarro } from "./components/carroItem";
-import { ModalCar } from "../../components/modal";
 
 export function Mycars() {
 
       const [modalVisible, setModalVisible] = useState(false);
+      const carroRef = useRef([])
 
       const [listCarros, setListCarros] = useState([])
       const focused = useIsFocused();
       const { getItem, removeItem } = useStorage();
+
+      const [selectedCar, setSelectedCar] = useState(null)
 
       useEffect(() => {
           async function loadCarros(){
@@ -31,6 +33,7 @@ export function Mycars() {
       }
 
       async function handleUpdateCarro(item) {
+        setSelectedCar(item)
         setModalVisible(true)
       }
 
@@ -55,12 +58,12 @@ export function Mycars() {
                     style={{ flex:1, paddingTop:14, }}
                     data={listCarros}
                     keyExtractor={ (item) => String(item) }
-                    renderItem={ ({item}) => <CarroItem data={item} removeCarro={ () => handleDeleteCarro(item) } updateCarro={ () => handleUpdateCarro(item) } /> }
+                    renderItem={ ({item}) => <CarroItem data={item} removeCarro={ () => handleDeleteCarro(item) } updateCarro={ () => handleUpdateCarro(item) } ref={(r) => (carroRef.current[item.id] = r)} /> }
                 />
             </View>
 
             <Modal visible={modalVisible} animationType='fade'>
-                <ModalCar handleClose={ () => setModalVisible(false) } />
+                <ModalCarro handleClose={ () => setModalVisible(false) } data={selectedCar} />
             </Modal>
         </SafeAreaView>
       );
