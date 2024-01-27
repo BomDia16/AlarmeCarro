@@ -19,12 +19,10 @@ export function CarroItem({ data, removeCarro, updateCarro }){
 
 export function ModalCarro({handleClose, data}) {
 
-    const [placaCarro, setPlacaCarro] = useState(data.placa)
-    const [marcaCarro, setMarcaCarro] = useState(data.marca)
-    const [modeloCarro, setModeloCarro] = useState(data.modelo)
-    const [corCarro, setCorCarro] = useState(data.cor)
-
-    const { updateItem } = useStorage();
+    const [placaCarro, updatePlacaCarro] = useState(data.placa)
+    const [marcaCarro, updateMarcaCarro] = useState(data.marca)
+    const [modeloCarro, updateModeloCarro] = useState(data.modelo)
+    const [corCarro, updateCorCarro] = useState(data.cor)
 
     async function handleUpdateCar() {
         const carro = {
@@ -44,7 +42,10 @@ export function ModalCarro({handleClose, data}) {
 
             //console.log(carro.placa,carro.cor,carro.marca,carro.modelo)
 
-            await updateItem('@carro', carro)
+            data.placa = carro.placa
+            data.marca = carro.marca
+            data.modelo = carro.modelo
+            data.cor = carro.cor
 
             alert('Carro salvo com sucesso!')
             handleClose();
@@ -66,25 +67,25 @@ export function ModalCarro({handleClose, data}) {
                                 options={{ mask: 'AAA-9999' }}
                                 placeholderTextColor="#161616" 
                                 value={placaCarro}
-                                onChangeText={ (value) => setPlacaCarro(value) }/>
+                                onChangeText={ (value) => updatePlacaCarro(value) }/>
 
                     <TextInput style={styles.input} 
                                 placeholder='Marca' 
                                 placeholderTextColor="#161616"
                                 value={marcaCarro}
-                                onChangeText={ (value) => setMarcaCarro(value) }/>
+                                onChangeText={ (value) => updateMarcaCarro(value) }/>
 
                     <TextInput style={styles.input} 
                                 placeholder='Modelo' 
                                 placeholderTextColor="#161616"
                                 value={modeloCarro}
-                                onChangeText={ (value) => setModeloCarro(value) }/>
+                                onChangeText={ (value) => updateModeloCarro(value) }/>
 
                     <TextInput style={styles.input} 
                                 placeholder='Cor' 
                                 placeholderTextColor="#161616"
                                 value={corCarro}
-                                onChangeText={ (value) => setCorCarro(value) }/>
+                                onChangeText={ (value) => updateCorCarro(value) }/>
                 </View>
 
                 <View style={styles.buttonArea}>
