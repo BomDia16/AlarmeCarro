@@ -19,6 +19,8 @@ export function CarroItem({ data, removeCarro, updateCarro }){
 
 export function ModalCarro({handleClose, data}) {
 
+    const { updateItem } = useStorage();
+
     const [placaCarro, updatePlacaCarro] = useState(data.placa)
     const [marcaCarro, updateMarcaCarro] = useState(data.marca)
     const [modeloCarro, updateModeloCarro] = useState(data.modelo)
@@ -42,10 +44,7 @@ export function ModalCarro({handleClose, data}) {
 
             //console.log(carro.placa,carro.cor,carro.marca,carro.modelo)
 
-            data.placa = carro.placa
-            data.marca = carro.marca
-            data.modelo = carro.modelo
-            data.cor = carro.cor
+            await updateItem('@car', carro)
 
             alert('Carro salvo com sucesso!')
             handleClose();
